@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --primary-color: #16a34a;
+  --secondary-color: #15803d;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-slate-900 dark:text-slate-100 antialiased bg-slate-50 dark:bg-slate-950 transition-colors duration-300;
+  }
+}
+
+/* Custom Utilities for Dynamic Branding */
+@layer utilities {
+  .bg-brand-primary { background-color: var(--primary-color); }
+  .bg-brand-secondary { background-color: var(--secondary-color); }
+  .text-brand-primary { color: var(--primary-color); }
+  .border-brand-primary { border-color: var(--primary-color); }
+  .ring-brand-primary { --tw-ring-color: var(--primary-color); }
+  .selection-brand::selection { background-color: var(--primary-color); color: white; }
+  
+  .animate-pulse-slow {
+    animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 3s infinite;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(-10%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+
+/* Fix main banner top cutoff on smaller notebooks/laptops with fixed header */
+@media (min-width: 1280px) and (max-height: 920px) {
+  #inicio {
+    padding-top: 80px !important;
+  }
+}
+

@@ -1,0 +1,166 @@
+{
+  "entities": {
+    "Branding": {
+      "title": "Configurações de Marca",
+      "description": "Logos e cores do sistema.",
+      "type": "object",
+      "properties": {
+        "logoUrl": { "type": "string", "description": "URL da imagem hospedada no Firebase Storage" },
+        "logoAlt": { "type": "string", "description": "Texto alternativo para a logo" },
+        "companyName": { "type": "string", "description": "Nome da empresa para exibição" },
+        "primaryColor": { "type": "string", "description": "Cor principal do tema (ex: #16a34a)" },
+        "secondaryColor": { "type": "string", "description": "Cor secundária do tema" },
+        "faviconUrl": { "type": "string", "description": "URL do ícone da aba do navegador" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["logoUrl", "companyName", "primaryColor"]
+    },
+    "User": {
+      "title": "Usuário",
+      "description": "Dados do funcionário no sistema.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "nome": { "type": "string" },
+        "email": { "type": "string" },
+        "cargo": { "type": "string" },
+        "tipo": { "type": "string", "enum": ["admin", "funcionario"] },
+        "status": { "type": "string", "enum": ["ativo", "inativo"] },
+        "verContratos": { "type": "string", "enum": ["Campo Grande", "Rondonópolis", "Todos"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "nome", "email", "tipo", "status"]
+    },
+    "ContractFile": {
+      "title": "Histórico de Contrato",
+      "description": "Metadados de um contrato gerado e salvo.",
+      "type": "object",
+      "properties": {
+        "empresa": { "type": "string" },
+        "tipoContrato": { "type": "string" },
+        "data": { "type": "string", "format": "date-time" },
+        "dataVencimentoContrato": { "type": "string", "format": "date", "description": "Data de vencimento (YYYY-MM-DD)" },
+        "usuarioId": { "type": "string" },
+        "usuarioNome": { "type": "string" },
+        "usuarioEmail": { "type": "string" },
+        "cidade": { "type": "string" },
+        "arquivoUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["pendente", "sucesso", "erro_upload"] },
+        "storagePath": { "type": "string" }
+      },
+      "required": ["empresa", "tipoContrato", "data", "usuarioId", "arquivoUrl", "status", "cidade"]
+    },
+    "ActivityLog": {
+      "title": "Log de Atividade",
+      "description": "Registro de ações realizadas no sistema.",
+      "type": "object",
+      "properties": {
+        "usuarioId": { "type": "string" },
+        "usuarioNome": { "type": "string" },
+        "usuarioEmail": { "type": "string" },
+        "acao": { "type": "string" },
+        "detalhes": { "type": "string" },
+        "data": { "type": "string", "format": "date-time" }
+      },
+      "required": ["usuarioId", "acao", "data"]
+    },
+    "Company": {
+      "title": "Empresa",
+      "description": "Dados cadastrais de clientes corporativos.",
+      "type": "object",
+      "properties": {
+        "cnpj": { "type": "string" },
+        "cnpjFormatado": { "type": "string" },
+        "nome": { "type": "string" },
+        "responsavel": { "type": "string" },
+        "endereco": { "type": "string" },
+        "cep": { "type": "string" },
+        "cidadeEstado": { "type": "string" },
+        "qntFuncionarios": { "type": "string" },
+        "prazoContratoPadrao": { "type": "string" },
+        "localForoPadrao": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["cnpj", "nome"]
+    },
+    "TestASO": {
+      "title": "ASO de Teste",
+      "description": "Dados de ASOs importados na área de teste.",
+      "type": "object",
+      "properties": {
+        "funcionarioNome": { "type": "string" },
+        "funcionarioCpf": { "type": "string" },
+        "empresaNome": { "type": "string" },
+        "empresaCnpj": { "type": "string" },
+        "pdfUrl": { "type": "string" },
+        "storagePath": { "type": "string" },
+        "originalFileName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string" },
+        "status": { "type": "string" }
+      }
+    },
+    "TestCompany": {
+      "title": "Empresa de Teste",
+      "description": "Empresas cadastradas na área de teste.",
+      "type": "object",
+      "properties": {
+        "nome": { "type": "string" },
+        "cnpj": { "type": "string" },
+        "cnpjLimpo": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "TestEmployee": {
+      "title": "Funcionário de Teste",
+      "description": "Funcionários cadastrados na área de teste.",
+      "type": "object",
+      "properties": {
+        "nome": { "type": "string" },
+        "cpf": { "type": "string" },
+        "cpfLimpo": { "type": "string" },
+        "empresaNome": { "type": "string" },
+        "empresaCnpj": { "type": "string" },
+        "empresaCnpjLimpo": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/settings/branding": {
+      "schema": "Branding",
+      "description": "Configurações globais de visual."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Perfis de funcionários."
+    },
+    "/contracts/{contractId}": {
+      "schema": "ContractFile",
+      "description": "Histórico de contratos gerados."
+    },
+    "/logs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Registros de trilha de auditoria."
+    },
+    "/companies/{cnpj}": {
+      "schema": "Company",
+      "description": "Cadastro de empresas clientes."
+    },
+    "/test_asos/{asoId}": {
+      "schema": "TestASO",
+      "description": "ASOs importados em testes."
+    },
+    "/test_empresas/{cnpj}": {
+      "schema": "TestCompany",
+      "description": "Empresas cadastradas em testes."
+    },
+    "/test_funcionarios/{cpf}": {
+      "schema": "TestEmployee",
+      "description": "Funcionários cadastrados em testes."
+    }
+  }
+}

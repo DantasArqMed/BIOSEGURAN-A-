@@ -1,0 +1,77 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Admin Helper
+    function isAdminOrTestAdmin() {
+      let email = request.auth.token.email.lower();
+      let allowedEmails = [
+        'admin@admin.com',
+        'dantasarqmed@gmail.com',
+        'davidallanos16@gmail.com',
+        'bioseguranca@hotmail.com'
+      ];
+
+      return request.auth != null && (
+        request.auth.token.admin == true ||
+        request.auth.token.isAdmin == true ||
+        request.auth.token.role in ["admin", "equipe"] ||
+        email in allowedEmails ||
+        email.endsWith('@arqmed.local') ||
+        email.endsWith('@biosegurancaarqmed.com.br')
+      );
+    }
+
+    // ASO-specific predicates
+    function isPdf() {
+      return request.resource == null || request.resource.contentType == "application/pdf";
+    }
+
+    function isUnderLimit() {
+      return request.resource == null || request.resource.size < 10 * 1024 * 1024;
+    }
+
+    // Public site images
+    match /img/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdminOrTestAdmin();
+    }
+
+    // Site configuration images
+    match /img/site/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdminOrTestAdmin();
+    }
+
+    // Contracts - Protected
+    match /contracts/{userId}/{allPaths=**} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdminOrTestAdmin());
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow delete, update: if isAdminOrTestAdmin();
+    }
+
+    // ASO Paths
+    match /asos/{cnpjLimpo}/{cpfLimpo}/{fileName} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && isPdf() && isUnderLimit();
+      allow delete, update: if isAdminOrTestAdmin();
+    }
+
+    match /empresas/{empresaId}/asos/{cpfLimpo}/{fileName} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && isPdf() && isUnderLimit();
+      allow delete, update: if isAdminOrTestAdmin();
+    }
+
+    match /companies/{companyId}/asos/{cpfLimpo}/{fileName} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && isPdf() && isUnderLimit();
+      allow delete, update: if isAdminOrTestAdmin();
+    }
+    
+    // Default catch-all
+    match /{allPaths=**} {
+      allow read, write: if isAdminOrTestAdmin();
+    }
+  }
+}
